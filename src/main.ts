@@ -15,13 +15,18 @@ WA.onInit().then(() => {
     WA.room.area.onEnter('clock').subscribe(() => {
         //const today = new Date();
         //const time = today.getHours() + ":" + today.getMinutes();
+
         const buttonDescriptor = {
             id: "startButton",
             label: "Start",
-            callback: () => {
+            callback: async () => {
                 closePopup();
-               WA.nav.openCoWebSite('chifomi.html' )
+                WA.controls.disablePlayerControls();
+                const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
+                //WA.controls.restorePlayerControls()
+                //coWebsite.close();
             }
+            
         };
         
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
@@ -31,6 +36,7 @@ WA.onInit().then(() => {
     
     
     WA.room.area.onLeave('clock').subscribe(closePopup);
+    
     
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure

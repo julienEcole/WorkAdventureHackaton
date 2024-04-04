@@ -2,7 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
+
     <title>chifomi</title>
+    <script src="https://play.workadventu.re/iframe_api.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   </head>
   <body>
@@ -22,18 +24,27 @@
       const buttons = document.querySelectorAll("button");
 
       for (let i = 0; i < buttons.length; i++){
-        buttons[i].addEventListener("click", function() {
+        buttons[i].addEventListener("click", async function() {
           var joueur = buttons[i].innerHTML;
           var robot = buttons[Math.floor(Math.random() * buttons.length)].innerHTML;
           var resultat;
 
-          // Logique entiere du jeu
-          if (joueur === robot)
-            resultat = "Vous avez fait une egalité !";
-          else if ((joueur === "Pierre" && robot === "Ciseaux") || (joueur === "Feuille" && robot === "Pierre") || (joueur === "Ciseaux" && robot === "Feuille"))
-            resultat = "gagne";
+
+           if ((joueur === "Pierre" && robot === "Ciseaux") || (joueur === "Feuille" && robot === "Pierre") || (joueur === "Ciseaux" && robot === "Feuille"))
+          {  
+          resultat = true;
+          WA.controls.restorePlayerControls();
+          console.log(resultat);
+            const coWebsites = await WA.nav.getCoWebSites();
+            for (let i = 0; i < coWebsites.length; i++) {
+                
+                coWebsites[i].close();
+            }
+            
+          }
           else
-            resultat = "perdu";
+            resultat = false;
+            console.log(resultat);
         })
       }
     </script>
