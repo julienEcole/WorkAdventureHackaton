@@ -186,7 +186,29 @@
          "draworder":"topdown",
          "id":65,
          "name":"Calque d'Objets 1",
-         "objects":[],
+         "objects":[
+                {
+                 "height":193,
+                 "id":28,
+                 "name":"greenZone",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":194,
+                 "x":286,
+                 "y":158
+                }, 
+                {
+                 "height":0,
+                 "id":29,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":543,
+                 "y":371
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -194,7 +216,7 @@
          "y":0
         }],
  "nextlayerid":66,
- "nextobjectid":24,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "properties":[
         {
