@@ -16,10 +16,24 @@ WA.onInit().then(async () => {
     WA.room.area.onEnter('clock').subscribe(() => {
         const today = new Date();
         const time = today.getHours() + ":" + today.getMinutes();
-        currentPopup = WA.ui.openPopup("clockPopup", "It's " + time, []);
+        const buttonDescriptor = {
+            id: "startButton",
+            label: "Start",
+            callback: () => {
+                closePopup();
+                currentPopup = WA.ui.openPopup("clockPopup", "It's " + time, []);
+                
+            }
+        };
+        
+        currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
+        
     })
 
-    WA.room.area.onLeave('clock').subscribe(closePopup)
+    
+    
+    WA.room.area.onLeave('clock').subscribe(closePopup);
+    
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra().then(() => {
@@ -130,4 +144,22 @@ function setDeathAnimation(xCoordinate: number,yCoordinate: number) {
 
 
 
+function chifoumi(){
+
+    const choices = ["Rock", "Paper", "Scissors"];
+    const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+    console.log(computerChoice);
+
+    const popupContent = `
+    <div>
+        <p>Choose your move:</p>
+        <button onclick="playGame('Rock')">Rock</button>
+        <button onclick="playGame('Paper')">Paper</button>
+        <button onclick="playGame('Scissors')">Scissors</button>
+    </div>
+`;
+
+// Open the popup with the game options
+currentPopup = WA.ui.openPopup("clockPopup", popupContent, []);
+}
 export {};
