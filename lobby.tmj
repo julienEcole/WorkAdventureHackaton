@@ -197,17 +197,6 @@
                  "width":194,
                  "x":286,
                  "y":158
-                }, 
-                {
-                 "height":0,
-                 "id":29,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":543,
-                 "y":371
                 }],
          "opacity":1,
          "type":"objectgroup",
