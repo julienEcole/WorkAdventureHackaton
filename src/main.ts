@@ -13,24 +13,38 @@ WA.onInit().then(() => {
     console.log('Player tags: ',WA.player.tags)
 
     WA.room.area.onEnter('clock').subscribe(() => {
-        const today = new Date();
-        const time = today.getHours() + ":" + today.getMinutes();
         const buttonDescriptor = {
             id: "startButton",
             label: "Start",
-            callback: () => {
+            callback: async () => {
                 closePopup();
-                currentPopup = WA.ui.openPopup("clockPopup", "It's " + time, []);
-                
+                //WA.controls.disablePlayerControls();
+                const coWebsite = await WA.nav.openCoWebSite('test.html', true );
+                //WA.controls.restorePlayerControls()
+                //coWebsite.close()
             }
         };
         
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
         
+        function startCountDown() {
+            let secondsLeft = 10;
+            const interval = setInterval(() => {
+                closePopup();
+                console.log('test')
+                currentPopup = WA.ui.openPopup("clockPopup", secondsLeft + " seconds", []);
+                secondsLeft--;
+                if (secondsLeft < 0) {
+                    clearInterval(interval);
+                    closePopup();
+                }
+            }, 1000);
+        }
     })
 
+
     
-    
+
     WA.room.area.onLeave('clock').subscribe(closePopup);
     
 
@@ -50,22 +64,5 @@ function closePopup(){
     }
 }
 
-function chifoumi(){
 
-    const choices = ["Rock", "Paper", "Scissors"];
-    const computerChoice = choices[Math.floor(Math.random() * choices.length)];
-    console.log(computerChoice);
-
-    const popupContent = `
-    <div>
-        <p>Choose your move:</p>
-        <button onclick="playGame('Rock')">Rock</button>
-        <button onclick="playGame('Paper')">Paper</button>
-        <button onclick="playGame('Scissors')">Scissors</button>
-    </div>
-`;
-
-// Open the popup with the game options
-currentPopup = WA.ui.openPopup("clockPopup", popupContent, []);
-}
 export {};
