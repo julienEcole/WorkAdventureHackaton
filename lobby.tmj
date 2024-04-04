@@ -234,6 +234,24 @@
                  "width":0,
                  "x":398,
                  "y":268
+                }, 
+                {
+                 "height":0,
+                 "id":35,
+                 "name":"count",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"variable",
+                 "visible":true,
+                 "width":0,
+                 "x":371.333333333333,
+                 "y":253.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -242,7 +260,7 @@
          "y":0
         }],
  "nextlayerid":68,
- "nextobjectid":33,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "properties":[
         {
