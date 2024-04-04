@@ -13,7 +13,11 @@ export class Impostor extends Player{
         });
     }
 
-    kill(victime : Player){ //TO FINISH
+    supprimerTache(tache: string) : void {  //need to be neutrelised
+        return;
+    }
+
+    kill(victime : Player) : void{ //TO FINISH
         if(victime instanceof Impostor)
 
         this.proie = this.proie.filter(proie => proie !== victime);
