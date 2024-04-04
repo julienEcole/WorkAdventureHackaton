@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chifomi</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Rock-paper-scissors_%28rock%29.png" width="100" alt="Pierre">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Rock-paper-scissors_%28paper%29.png" width="100" alt="Feuille">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Rock-paper-scissors_%28scissors%29.png" width="100" alt="Ciseaux">
+      <p></p>
+    
+      <button class="btn btn-warning btn-lg">Pierre</button>
+      <button class="btn btn-danger btn-lg">Feuille</button>
+      <button class="btn btn-success btn-lg">Ciseaux</button>
+      <div class="resultat"></div>
+    </div>
+
+    <script type="text/javascript">
+      const buttons = document.querySelectorAll("button");
+
+      for (let i = 0; i < buttons.length; i++){
+        buttons[i].addEventListener("click", function() {
+          var joueur = buttons[i].innerHTML;
+          var robot = buttons[Math.floor(Math.random() * buttons.length)].innerHTML;
+          var resultat;
+
+          // Logique entiere du jeu
+          if (joueur === robot)
+            resultat = "Vous avez fait une egalité !";
+          else if ((joueur === "Pierre" && robot === "Ciseaux") || (joueur === "Feuille" && robot === "Pierre") || (joueur === "Ciseaux" && robot === "Feuille"))
+            resultat = "gagne";
+          else
+            resultat = "perdu";
+        })
+      }
+    </script>
+  </body>
+</html>
