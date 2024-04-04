@@ -1,17 +1,17 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
-import { bootstrapExtra } from "@workadventure/scripting-api-extra";
+import {bootstrapExtra} from "@workadventure/scripting-api-extra";
 
 console.log('Script started successfully');
 var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
-let currentPopup: any = undefined;
 
 let nearbyPlayer = null;
-
+let currentPopup: any = undefined;
+let interval: any = undefined;
 // Waiting for the API to be ready
 WA.onInit().then(async () => {
     console.log('Scripting API ready');
-    console.log('Player tags: ',WA.player.tags)
+    console.log('Player tags: ', WA.player.tags)
 
     listenOnGreenZone();
     listenOnPlayers();
@@ -29,59 +29,51 @@ WA.onInit().then(async () => {
                 //WA.controls.restorePlayerControls()
                 //coWebsite.close();
             }
-            
+
         };
-        
+
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
-        
+
     })
 
-    
-    
+
     WA.room.area.onLeave('clock').subscribe(closePopup);
-    
-    
 
 
     bootstrapExtra().then(() => {
         console.log('Scripting API Extra ready');
     }).catch(e => console.error(e));
-    if(WA.player.name == "padchans") {WA.player.state.dead = true;}
-    
-    if(WA.player.state.dead==true)  WA.player.setOutlineColor(255, 0, 0) ;
-    
-    
+    if (WA.player.name == "padchans") {
+        WA.player.state.dead = true;
+    }
+
+    if (WA.player.state.dead == true) WA.player.setOutlineColor(255, 0, 0);
+
+
     await WA.players.configureTracking();
 
-    WA.event.on('player-killed').subscribe(async ( { data: { killedPlayerId } }) => {
-        console.log(`Killed player: ${killedPlayerId }`);
+    WA.event.on('player-killed').subscribe(async ({data: {killedPlayerId}}) => {
+        console.log(`Killed player: ${killedPlayerId}`);
         if (WA.player.playerId === killedPlayerId) {
             const position = await WA.player.getPosition();
             WA.player.state.dead = true;
             WA.player.setOutlineColor(255, 0, 0);
-            
+
             WA.room.setTiles([
-        
-                {x:Number(position.x) , y: Number(position.y), tile: "deathAnimation", layer: "floorLayer"},
+
+                {x: Number(position.x), y: Number(position.y), tile: "deathAnimation", layer: "floorLayer"},
             ]);
-            WA.player.teleport(786,296);
+            WA.player.teleport(786, 296);
             WA.controls.disablePlayerControls()
-          
-            
+
+
         }
     });
 
 
-
-
-
-
-
-
-
 }).catch(e => console.error(e));
 
-function closePopup(){
+function closePopup() {
     if (currentPopup !== undefined) {
         currentPopup.close();
         currentPopup = undefined;
@@ -92,75 +84,63 @@ WA.player.onPlayerMove(addKillButton);
 WA.player.onPlayerMove(removeKillButton);
 
 WA.player.onPlayerMove(removeKillButton);
+
 //WA.player.onPlayerMove(bloquedPlayer);
 
-function bloquedPlayer(){
-    if (WA.player.state.dead==true) WA.player.teleport(786,296);
+function bloquedPlayer() {
+    if (WA.player.state.dead == true) WA.player.teleport(786, 296);
 }
 
-async function addKillButton(){
-    
+async function addKillButton() {
+
 
     await WA.players.configureTracking();
     const players = WA.players.list();
     for (const otherPlayer of players) {
         const position1 = await WA.player.getPosition();
-        const position2 =  otherPlayer.position;
+        const position2 = otherPlayer.position;
 
-        if (Math.sqrt((position1.x - position2.x)**2 + (position1.y - position2.y)**2) < 60 && otherPlayer.state.dead!=true) {
+        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true) {
             WA.ui.actionBar.addButton({
                 id: 'kill-btn',
                 label: `Tuer ${otherPlayer.name}`,
                 callback: (event) => {
                     console.log('Button clicked', event);
-                    WA.event.broadcast('player-killed', { killedPlayerId: otherPlayer.playerId });
+                    WA.event.broadcast('player-killed', {killedPlayerId: otherPlayer.playerId});
                     screamSound.play(config);
-                    
+
                 }
             });
         }
     }
 }
-async function  removeKillButton(){
+
+async function removeKillButton() {
     await WA.players.configureTracking();
     const players = WA.players.list();
     for (const otherPlayer of players) {
-       
+
         const position1 = await WA.player.getPosition();
-        const position2 =  otherPlayer.position;
+        const position2 = otherPlayer.position;
 
-        if (Math.sqrt((position1.x - position2.x)**2 + (position1.y - position2.y)**2) > 60) {
+        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) > 60) {
             WA.ui.actionBar.removeButton('kill-btn');
-           
+
         }
-}}
-
-
-
-
-function setDeathAnimation(xCoordinate: number,yCoordinate: number) {
-    console.log("test animation")
-    WA.room.setTiles([
-        
-        {x:Number(xCoordinate) , y: Number(yCoordinate), tile: "deathAnimation", layer: "floorlayer"},
-    ]);
+    }
 }
-
-
-
-function chifoumi(){
-function checkPlayers(){
+function checkPlayers() {
     const players = Array.from(WA.players.list());
-    if(WA.player.state.isReady == false||players.length == 0){
+    if (WA.player.state.isReady == false || players.length == 0) {
         return false;
     }
     for (const player of players) {
-        if(player.state.isReady == false ){
+        if (player.state.isReady == false) {
             return false;
         }
     }
     return true;
-        
+
 }
 
 function startCountDown() {
@@ -173,47 +153,44 @@ function startCountDown() {
         if (secondsLeft < 0) {
             clearInterval(interval);
             closePopup();
-            WA.event.broadcast("started",null)
+            WA.event.broadcast("started", null)
         }
     }, 1000);
 }
 
 
-
-function listenOnPlayers(){
+function listenOnPlayers() {
     WA.event.on("started").subscribe(() => {
         WA.nav.goToRoom('map.tmj');
     });
 }
 
-function listenOnGreenZone(){
-    WA.room.area.onEnter('greenZone').subscribe(()=>{
-        WA.player.state.isReady = true;
-        if(checkPlayers()){
-            console.log("lancement de la popup")
-            closePopup();
-            const buttonDescriptor = {
-            id: "startButton",
-            label: "Start",
-            callback: () => {
-                console.log('fermer')
+function listenOnGreenZone() {
+    WA.room.area.onEnter('greenZone').subscribe(() => {
+            WA.player.state.isReady = true;
+            if (checkPlayers()) {
+                console.log("lancement de la popup")
                 closePopup();
-                startCountDown();
+                const buttonDescriptor = {
+                    id: "startButton",
+                    label: "Start",
+                    callback: () => {
+                        console.log('fermer')
+                        closePopup();
+                        startCountDown();
+                    }
+                };
+                currentPopup = WA.ui.openPopup("countDown", "Lancer la partie ?", [buttonDescriptor])
             }
-        };
-        currentPopup = WA.ui.openPopup("countDown","Lancer la partie ?",[buttonDescriptor])
         }
-    }
-
-
     )
-    WA.room.area.onLeave('greenZone').subscribe(()=>{
+    WA.room.area.onLeave('greenZone').subscribe(() => {
         WA.player.state.isReady = false;
         console.log('is ready player ' + WA.player.state.isReady)
         console.log(checkPlayers())
-        if(checkPlayers()){
+        if (checkPlayers()) {
             console.log("Tout les jouers sont prets")
-        }else{
+        } else {
             closePopup();
             clearInterval(interval);
         }
