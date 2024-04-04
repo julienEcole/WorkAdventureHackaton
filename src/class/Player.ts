@@ -4,12 +4,14 @@ export class Player {
     pseudo: string;
     listeTaches: string[];
     alive: boolean;
+    votedBy : number
 
     constructor(pseudo: string) {
         this.pseudo = pseudo;
         this.listeTaches = [];
         this.genererTachesAleatoires();
         this.alive = true;
+        this.votedBy = 0;
     }
 
     // Méthode pour générer aléatoirement trois tâches
@@ -54,6 +56,11 @@ export class Player {
 
     vote(joueurSuspicieux : Player) : void{
         //TODO
+        joueurSuspicieux.votedBy += 1;
+
+        //EXECUTE IF HAVE THE MAX NUMBER OF VOTE
+
+        this.votedBy = 0;
     }
 
     die() : void{
