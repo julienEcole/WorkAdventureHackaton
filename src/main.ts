@@ -4,8 +4,9 @@ import {bootstrapExtra} from "@workadventure/scripting-api-extra";
 
 console.log('Script started successfully');
 var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
+let mapName = ""
+var killingPossibility : boolean = false;
 
-let nearbyPlayer = null;
 let currentPopup: any = undefined;
 let interval: any = undefined;
 // Waiting for the API to be ready
@@ -15,6 +16,7 @@ WA.onInit().then(async () => {
 
     listenOnGreenZone();
     listenOnPlayers();
+    listenForCountDown();
     WA.room.area.onEnter('clock').subscribe(() => {
         //const today = new Date();
         //const time = today.getHours() + ":" + today.getMinutes();
@@ -92,7 +94,11 @@ function bloquedPlayer() {
 }
 
 async function addKillButton() {
+    mapName = extractLastSegmentFromUrl( WA.room.mapURL);
+    console.log("MAP NAME"+mapName)
 
+    if(mapName=="spaceship.tmj") {killingPossibility = true} ;
+console.log("killing"+killingPossibility)
 
     await WA.players.configureTracking();
     const players = WA.players.list();
@@ -100,7 +106,7 @@ async function addKillButton() {
         const position1 = await WA.player.getPosition();
         const position2 = otherPlayer.position;
 
-        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true) {
+        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true&& killingPossibility==true) {
             WA.ui.actionBar.addButton({
                 id: 'kill-btn',
                 label: `Tuer ${otherPlayer.name}`,
@@ -161,7 +167,13 @@ function startCountDown() {
 
 function listenOnPlayers() {
     WA.event.on("started").subscribe(() => {
-        WA.nav.goToRoom('map.tmj');
+        WA.nav.goToRoom('spaceship.tmj');
+    });
+}
+
+function listenForCountDown() {
+    WA.event.on("countdown").subscribe(() => {
+        startCountDown();
     });
 }
 
@@ -177,7 +189,7 @@ function listenOnGreenZone() {
                     callback: () => {
                         console.log('fermer')
                         closePopup();
-                        startCountDown();
+                        WA.event.broadcast("countdown", null)
                     }
                 };
                 currentPopup = WA.ui.openPopup("countDown", "Lancer la partie ?", [buttonDescriptor])
@@ -196,6 +208,13 @@ function listenOnGreenZone() {
         }
     });
 
+
+}
+function extractLastSegmentFromUrl(url) {
+    // Utilisation de la méthode split() pour séparer l'URL en segments en fonction du caractère "/"
+    const segments = url.split('/');
+    // Retourner le dernier segment de l'URL
+    return segments.pop();
 }
 
 export {};
