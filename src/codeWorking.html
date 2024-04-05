@@ -34,7 +34,7 @@
 </head>
 <body>
     <div id="gameContainer">
-        <div id="progressBarContainer">
+        <div id="Container">
             <img id="loadingGif" src="/images/game_code_gif.gif" alt="loading" style="display: none;">
         </div>
         <div id="progressBar">
@@ -52,12 +52,21 @@
             let message = document.getElementById('message');
             let progress = 0;
             loadingGif.style.display = 'block';
-            let interval = setInterval(function() {
+            let interval = setInterval(async function () {
                 progress += 10;
                 progressBar.style.width = progress + '%';
                 if (progress >= 100) {
                     clearInterval(interval);
                     message.textContent = 'true';
+                    resultat = true;
+                    WA.controls.restorePlayerControls();
+                    console.log(resultat);
+                    const coWebsites = await WA.nav.getCoWebSites();
+                    for (let i = 0; i < coWebsites.length; i++) {
+
+                        coWebsites[i].close();
+                    }
+
                 }
             }, 1000);
         }
