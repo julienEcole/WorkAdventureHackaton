@@ -8,7 +8,7 @@ var screamSound = WA.sound.loadSound("/sounds/scream.ogg");
 let mapName: string | undefined = ""
 var killingPossibility: boolean = false;
 
-
+var isPoped : boolean = false
 let currentPopup: any = undefined;
 let interval: any = undefined;
 // Waiting for the API to be ready
@@ -16,6 +16,7 @@ WA.onInit().then(async () => {
     console.log('Scripting API ready');
     console.log('Player tags: ', WA.player.tags)
 
+    WA.player.state.isKiller = isKiller()
 
     var thePlayer : Player = new Player("titi")
     
@@ -191,10 +192,17 @@ WA.player.onPlayerMove(removeKillButton);
 //WA.player.onPlayerMove(bloquedPlayer);
 async function addKillButton() {
     mapName = extractLastSegmentFromUrl(WA.room.mapURL);
-    console.log("MAP NAME" + mapName)
+    var killer = await WA.player.state.isKiller
+    console.log("killer : "+killer)
 
     if (mapName == "spaceship.tmj") {
-        killingPossibility = true
+        if(isPoped == false){
+            showRole();
+            isPoped = true;}
+        if(killer == true){
+            killingPossibility = true
+        }
+
     }
     console.log("killing" + killingPossibility)
 
@@ -377,6 +385,31 @@ function extractLastSegmentFromUrl(url: string) {
     // Retourner le dernier segment de l'URL
     return segments.pop();
 }
+async function showRole(){
+    if(await WA.player.state.isKiller == true){
+        WA.ui.openPopup("rolePopup", "Vous êtes un imposteur", [])
+    }else{
+        WA.ui.openPopup("rolePopup", "Vous êtes un Crewmate", [])
+    }
 
+    setInterval(function() {
+    }, 4000);
+    closePopup()
+
+}
+
+function closePopup() {
+    if (currentPopup !== undefined) {
+        currentPopup.close();
+        currentPopup = undefined;
+    }
+}
+
+function isKiller(){
+    let a = Math.random()*10;
+    console.log(Math.trunc(a/2))
+    if (Math.trunc(a%2)==0) return true
+    else return false;
+}
 
 export {};

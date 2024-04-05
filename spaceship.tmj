@@ -1539,6 +1539,17 @@
                  "width":32,
                  "x":1826.66666666667,
                  "y":1088
+                }, 
+                {
+                 "height":49.9438132101386,
+                 "id":76,
+                 "name":"rolePopup",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":124.859533025347,
+                 "x":1460.85653639655,
+                 "y":359.595455112998
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1666,7 +1677,7 @@
          "y":0
         }],
  "nextlayerid":75,
- "nextobjectid":76,
+ "nextobjectid":77,
  "orientation":"orthogonal",
  "properties":[
         {
