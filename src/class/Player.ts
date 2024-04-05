@@ -18,9 +18,9 @@ export class Player {
     protected genererTachesAleatoires() {
         const tachesPossibles: string[] = Object.values(Taches);
 
-        tachesPossibles.forEach(element => {
-            // console.log("tache Possible : %s\n", element)
-        });
+        // tachesPossibles.forEach(element => {
+        //     console.log("tache Possible : %s\n", element)
+        // });
 
         // Si le nombre de tâches possibles est inférieur ou égal à 3, prenez toutes les tâches possibles
         if (tachesPossibles.length < 3) {
