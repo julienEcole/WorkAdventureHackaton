@@ -61,17 +61,18 @@ WA.onInit().then(async () => {
         WA.player.state.dead = true;
     }
 
-    if (WA.player.state.dead == true) WA.player.setOutlineColor(255, 0, 0);
+    if (WA.player.state.dead == true) await WA.player.setOutlineColor(255, 0, 0);
 
 
     await WA.players.configureTracking();
 
-    WA.event.on('player-killed').subscribe(async ({data: killedPlayerId}) => {
+    WA.event.on('player-killed').subscribe(async ({data: {killedPlayerId}}) => {
         console.log(`Killed player: ${killedPlayerId}`);
         if (WA.player.playerId === killedPlayerId) {
             WA.player.state.dead = true;
-            WA.player.setOutlineColor(255, 0, 0);
-            WA.player.teleport(3000, 296);
+            await WA.player.setOutlineColor(255, 0, 0);
+            console.log("hello i don't understandz")
+            await WA.player.teleport(3000, 296);
             WA.controls.disablePlayerControls()
 
 
