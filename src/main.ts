@@ -13,8 +13,7 @@ WA.onInit().then(() => {
     console.log('Player tags: ',WA.player.tags)
 
     WA.room.area.onEnter('clock').subscribe(() => {
-        //const today = new Date();
-        //const time = today.getHours() + ":" + today.getMinutes();
+
 
         const buttonDescriptor = {
             id: "startButton",
@@ -23,8 +22,7 @@ WA.onInit().then(() => {
                 closePopup();
                 WA.controls.disablePlayerControls();
                 const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
-                //WA.controls.restorePlayerControls()
-                //coWebsite.close();
+
             }
             
         };
