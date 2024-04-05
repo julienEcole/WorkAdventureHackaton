@@ -51,7 +51,7 @@ WA.onInit().then(async () => {
             
         };
         
-        currentPopup = WA.ui.openPopup("numbersPopup", "", [buttonDescriptor1]);
+        currentPopup = WA.ui.openPopup("numbers_popup", "", [buttonDescriptor1]);
     })
     
 
@@ -61,7 +61,23 @@ WA.onInit().then(async () => {
     
     
 
-    //WA.room.area.onLeave('clock').subscribe(closePopup);
+    WA.room.area.onEnter('badge').subscribe(() => {
+
+        const buttonDescriptor2 = {
+            id: "startButton",
+            label: "Start",
+            callback: async () => {
+                closePopup();
+                WA.controls.disablePlayerControls();
+                const coWebsite = await WA.nav.openCoWebSite('scanBadge.html', true);
+            }
+            
+        };
+        
+        currentPopup = WA.ui.openPopup("badge_popup", "", [buttonDescriptor2]);
+        
+    })
+    WA.room.area.onLeave('badge').subscribe(closePopup);
 
 
 
