@@ -1,12 +1,12 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import {bootstrapExtra} from "@workadventure/scripting-api-extra";
-import {config} from "dotenv";
+import { Impostor, Player } from "./class/Player";
 
 console.log('Script started successfully');
 var screamSound = WA.sound.loadSound("/sounds/scream.ogg");
 let mapName: string | undefined = ""
-var killingPossibility : boolean = false;
+var killingPossibility: boolean = false;
 
 
 let currentPopup: any = undefined;
@@ -15,6 +15,14 @@ let interval: any = undefined;
 WA.onInit().then(async () => {
     console.log('Scripting API ready');
     console.log('Player tags: ', WA.player.tags)
+
+
+    var thePlayer : Player = new Player("titi")
+    
+    var Other : Player = new Player("toto")
+
+    var monImpo : Impostor = new Impostor("sus", [thePlayer, Other])
+    let currentPopup: any = undefined;
 
     listenOnGreenZone();
     listenOnPlayers();
@@ -30,8 +38,12 @@ WA.onInit().then(async () => {
                 WA.controls.disablePlayerControls();
                 const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
             }
-            
+
         };
+
+        // const today = new Date();
+        // const time = today.getHours() + ":" + today.getMinutes();
+        currentPopup = WA.ui.openPopup("clockPopup", "\n\nVos taches sont :\n" + monImpo.tacheToString(), []);
         
         currentPopup = WA.ui.openPopup("cofee_popup", "", [buttonDescriptor]);
         
@@ -90,6 +102,24 @@ WA.onInit().then(async () => {
         WA.player.state.dead = true;
     }
 
+    if (WA.player.state.dead == true) await WA.player.setOutlineColor(255, 0, 0);
+
+
+    await WA.players.configureTracking();
+
+    WA.event.on('player-killed').subscribe(async ({data: {killedPlayerId}}) => {
+        console.log(`Killed player: ${killedPlayerId}`);
+        if (WA.player.playerId === killedPlayerId) {
+            WA.player.state.dead = true;
+            await WA.player.setOutlineColor(255, 0, 0);
+            console.log("hello i don't understandz")
+            await WA.player.teleport(3000, 296);
+            //WA.controls.disablePlayerControls()
+
+
+        }
+    });
+
     if (WA.player.state.dead == true) WA.player.setOutlineColor(255, 0, 0);
 
 
@@ -123,11 +153,13 @@ WA.player.onPlayerMove(removeKillButton);
 
 //WA.player.onPlayerMove(bloquedPlayer);
 async function addKillButton() {
-    mapName = extractLastSegmentFromUrl( WA.room.mapURL);
-    console.log("MAP NAME"+mapName)
+    mapName = extractLastSegmentFromUrl(WA.room.mapURL);
+    console.log("MAP NAME" + mapName)
 
-    if(mapName=="spaceship.tmj") {killingPossibility = true} ;
-console.log("killing"+killingPossibility)
+    if (mapName == "spaceship.tmj") {
+        killingPossibility = true
+    }
+    console.log("killing" + killingPossibility)
 
     await WA.players.configureTracking();
     const players = WA.players.list();
@@ -135,14 +167,14 @@ console.log("killing"+killingPossibility)
         const position1 = await WA.player.getPosition();
         const position2 = otherPlayer.position;
 
-        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true&& killingPossibility==true) {
+        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true && killingPossibility == true) {
             WA.ui.actionBar.addButton({
                 id: 'kill-btn',
                 label: `Tuer ${otherPlayer.name}`,
                 callback: (event) => {
                     console.log('Button clicked', event);
                     WA.event.broadcast('player-killed', {killedPlayerId: otherPlayer.playerId});
-                    screamSound.play(config);
+                    screamSound.play(undefined);
 
                 }
             });
@@ -164,6 +196,7 @@ async function removeKillButton() {
         }
     }
 }
+
 function checkPlayers() {
     const players = Array.from(WA.players.list());
     if (WA.player.state.isReady == false || players.length == 0) {
@@ -239,6 +272,7 @@ function listenOnGreenZone() {
 
 
 }
+
 function extractLastSegmentFromUrl(url: string) {
     // Utilisation de la méthode split() pour séparer l'URL en segments en fonction du caractère "/"
     const segments = url.split('/');
@@ -247,4 +281,3 @@ function extractLastSegmentFromUrl(url: string) {
 }
 
 export {};
-

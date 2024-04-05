@@ -1,14 +1,14 @@
-import { Taches } from "./taches";
+import { Taches } from "./Taches";
 
 export class Player {
     pseudo: string;
-    listeTaches: string[];
+    taches: string[];
     alive: boolean;
     votedBy : number
 
     constructor(pseudo: string) {
         this.pseudo = pseudo;
-        this.listeTaches = [];
+        this.taches = [];
         this.genererTachesAleatoires();
         this.alive = true;
         this.votedBy = 0;
@@ -18,39 +18,43 @@ export class Player {
     protected genererTachesAleatoires() {
         const tachesPossibles: string[] = Object.values(Taches);
 
+        tachesPossibles.forEach(element => {
+            console.log("tache Possible : %s\n", element)
+        });
+
         // Si le nombre de tâches possibles est inférieur ou égal à 3, prenez toutes les tâches possibles
-        if (tachesPossibles.length <= 3) {
-            this.listeTaches = tachesPossibles;
+        if (tachesPossibles.length < 3) {
+            this.taches = tachesPossibles;
         } else {
-            const tachesAleatoires: string[] = [];
             const indexesUtilises: number[] = [];
 
-            while (tachesAleatoires.length < 3) {
+            while (this.taches.length < 3) {
                 const tacheIndex = Math.floor(Math.random() * tachesPossibles.length);
+
+                console.log("index choisi : %d\n", tacheIndex)
                 if (!indexesUtilises.includes(tacheIndex)) {
-                    tachesAleatoires.push(tachesPossibles[tacheIndex]);
+                    this.taches.push(tachesPossibles[tacheIndex]);
+                    console.log("task add : " + tachesPossibles[tacheIndex] + '\n')
                     indexesUtilises.push(tacheIndex);
                 }
             }
-
-            this.listeTaches = tachesAleatoires;
         }
     }
 
     // Méthode pour ajouter une tâche à la liste
     ajouterTache(tache: string) : void{
-        this.listeTaches.push(tache);
+        this.taches.push(tache);
     }
 
     ajouterListeTache(taches: string[]) : void {
-        this.listeTaches = taches
+        this.taches = taches
     }
 
     // Méthode pour supprimer une tâche de la liste
     supprimerTache(tache: string) : void{
-        const index = this.listeTaches.indexOf(tache);
+        const index = this.taches.indexOf(tache);
         if (index !== -1) {
-            this.listeTaches.splice(index, 1);
+            this.taches.splice(index, 1);
         }
     }
 
@@ -63,9 +67,58 @@ export class Player {
         this.votedBy = 0;
     }
 
+    tacheToString() : string{
+        var result : string = ""
+
+        this.taches.forEach(tache => {
+            result += tache + '\n'
+        });
+        return result
+    }
+
     die() : void{
         this.alive = false;
 
-        this.listeTaches = []
+        this.taches = []
+    }
+}
+
+export class Impostor extends Player{
+    proies: Player[]
+
+    constructor(pseudo: string, victimes : &Player[]) {
+        super(pseudo)
+        // this.taches = []   //TO MODIFY si jamais on veut donner des false task au imposteurs
+        this.proies = [];
+        victimes.forEach(victime => {
+            this.proies.push(victime)
+        });
+    }
+
+    supprimerTache(_tache: string) : void {  //need to be neutrelised
+        _tache = "";
+        return;
+    }
+
+    tacheToString() : string{
+        var result : string = "tuez tous les crewmates\n\n"
+
+        // this.proies.forEach(proie => {
+        //     result += "kill " + proie.pseudo + '\n'
+        // });
+
+        result += "les taches que tu peux usurper :\n"
+        this.taches.forEach(tache => {
+            result += tache + '\n' 
+        })
+        return result
+    }
+
+    kill(victime : Player) : void{ //TO FINISH
+        if(victime instanceof Impostor)
+
+        this.proies = this.proies.filter(proie => proie !== victime);
+
+        victime.die()
     }
 }
