@@ -8,6 +8,7 @@ var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
 let mapName: string | undefined = ""
 var killingPossibility : boolean = false;
 
+
 let currentPopup: any = undefined;
 let interval: any = undefined;
 // Waiting for the API to be ready
@@ -28,17 +29,22 @@ WA.onInit().then(async () => {
             callback: async () => {
                 closePopup();
                 WA.controls.disablePlayerControls();
-                await WA.nav.openCoWebSite('chifomi.html', true);
-                WA.controls.restorePlayerControls()
+                const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
+                //WA.controls.restorePlayerControls()
                 //coWebsite.close();
             }
-
+            
         };
-
+        
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
-
+        
     })
 
+    
+    
+    WA.room.area.onLeave('clock').subscribe(closePopup);
+    
+    
 
     WA.room.area.onLeave('clock').subscribe(closePopup);
 
@@ -50,30 +56,6 @@ WA.onInit().then(async () => {
         WA.player.state.dead = true;
     }
 
-    if (WA.player.state.dead == true) WA.player.setOutlineColor(255, 0, 0);
-
-
-    await WA.players.configureTracking();
-
-    WA.event.on('player-killed').subscribe(async ({data: {killedPlayerId}}) => {
-        console.log(`Killed player: ${killedPlayerId}`);
-        if (WA.player.playerId === killedPlayerId) {
-            const position = await WA.player.getPosition();
-            WA.player.state.dead = true;
-            WA.player.setOutlineColor(255, 0, 0);
-
-            WA.room.setTiles([
-
-                {x: Number(position.x), y: Number(position.y), tile: "deathAnimation", layer: "floorLayer"},
-            ]);
-            WA.player.teleport(786, 296);
-            WA.controls.disablePlayerControls()
-
-
-        }
-    });
-
-
 }).catch(e => console.error(e));
 
 function closePopup() {
@@ -83,6 +65,11 @@ function closePopup() {
     }
 }
 
+function chifoumi(){
+
+    
+}
+   
 WA.player.onPlayerMove(addKillButton);
 WA.player.onPlayerMove(removeKillButton);
 
