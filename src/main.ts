@@ -211,4 +211,3 @@ function extractLastSegmentFromUrl(url: string) {
 }
 
 export {};
-
