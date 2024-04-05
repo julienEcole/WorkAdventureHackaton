@@ -27,7 +27,9 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 index: "./index.html",
-                test: "./test.html",
+                scanBadge: "./scanBadge.html",
+                chifomi: "./chifomi.html",
+                unlock : "./Unlock.html",
                 ...getMapsScripts(maps),
             },
         },
