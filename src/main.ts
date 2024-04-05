@@ -1,6 +1,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import {bootstrapExtra} from "@workadventure/scripting-api-extra";
+import { Impostor, Player } from "./class/Player";
 
 console.log('Script started successfully');
 var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
@@ -14,6 +15,14 @@ let interval: any = undefined;
 WA.onInit().then(async () => {
     console.log('Scripting API ready');
     console.log('Player tags: ', WA.player.tags)
+
+
+    var thePlayer : Player = new Player("titi")
+    
+    var Other : Player = new Player("toto")
+
+    var monImpo : Impostor = new Impostor("sus", [thePlayer, Other])
+    let currentPopup: any = undefined;
 
     listenOnGreenZone();
     listenOnPlayers();
@@ -33,6 +42,10 @@ WA.onInit().then(async () => {
             }
             
         };
+
+        // const today = new Date();
+        // const time = today.getHours() + ":" + today.getMinutes();
+        currentPopup = WA.ui.openPopup("clockPopup", "\n\nVos taches sont :\n" + monImpo.tacheToString(), []);
         
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
     })

@@ -88,7 +88,7 @@ export class Impostor extends Player{
 
     constructor(pseudo: string, victimes : &Player[]) {
         super(pseudo)
-        this.taches = []   //TO MODIFY si jamais on veut donner des false task au imposteurs
+        // this.taches = []   //TO MODIFY si jamais on veut donner des false task au imposteurs
         this.proies = [];
         victimes.forEach(victime => {
             this.proies.push(victime)
@@ -101,11 +101,16 @@ export class Impostor extends Player{
     }
 
     tacheToString() : string{
-        var result : string = ""
+        var result : string = "tuez tous les crewmates\n\n"
 
-        this.proies.forEach(proie => {
-            result = "kill " + proie.pseudo + '\n'
-        });
+        // this.proies.forEach(proie => {
+        //     result += "kill " + proie.pseudo + '\n'
+        // });
+
+        result += "les taches que tu peux usurper :\n"
+        this.taches.forEach(tache => {
+            result += tache + '\n' 
+        })
         return result
     }
 
