@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProgressBar Game</title>
+    <style>
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #progressBarContainer {
+            position: relative;
+        }
+
+        #progressBar {
+            width: 300px;
+            height: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        #progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 1s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="progressBarContainer">
+            <img id="loadingGif" src="/images/game_code_gif.gif" alt="loading" style="display: none;">
+        </div>
+        <div id="progressBar">
+            <div id="progress"></div>
+        </div>
+        <button onclick="startGame()">Commencer</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function startGame() {
+            let progressBarContainer = document.getElementById('progressBarContainer');
+            let loadingGif = document.getElementById('loadingGif');
+            let progressBar = document.getElementById('progress');
+            let message = document.getElementById('message');
+            let progress = 0;
+            loadingGif.style.display = 'block';
+            let interval = setInterval(function() {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    message.textContent = 'true';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

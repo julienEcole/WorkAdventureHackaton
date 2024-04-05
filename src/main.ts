@@ -20,14 +20,17 @@ WA.onInit().then(async () => {
     listenOnPlayers();
     listenForCountDown();
     WA.room.area.onEnter('clock').subscribe(() => {
-        //const today = new Date();
-        //const time = today.getHours() + ":" + today.getMinutes();
-
+        const today = new Date();
+        const time = today.getHours() + ":" + today.getMinutes();
         const buttonDescriptor = {
             id: "startButton",
             label: "Start",
             callback: async () => {
                 closePopup();
+                //WA.controls.disablePlayerControls();
+                const coWebsite = await WA.nav.openCoWebSite('test.html', true );
+                //WA.controls.restorePlayerControls()
+                //coWebsite.close()
                 WA.controls.disablePlayerControls();
                 const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
                 //WA.controls.restorePlayerControls()
@@ -38,10 +41,24 @@ WA.onInit().then(async () => {
         
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
         
+        function startCountDown() {
+            let secondsLeft = 10;
+            const interval = setInterval(() => {
+                closePopup();
+                console.log('test')
+                currentPopup = WA.ui.openPopup("clockPopup", secondsLeft + " seconds", []);
+                secondsLeft--;
+                if (secondsLeft < 0) {
+                    clearInterval(interval);
+                    closePopup();
+                }
+            }, 1000);
+        }
     })
 
+
     
-    
+
     WA.room.area.onLeave('clock').subscribe(closePopup);
     
     
@@ -65,7 +82,6 @@ function closePopup() {
     }
 }
 
-function chifoumi(){
 
     
 }
