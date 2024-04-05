@@ -19,7 +19,7 @@ export class Player {
         const tachesPossibles: string[] = Object.values(Taches);
 
         tachesPossibles.forEach(element => {
-            console.log("tache Possible : %s\n", element)
+            // console.log("tache Possible : %s\n", element)
         });
 
         // Si le nombre de tâches possibles est inférieur ou égal à 3, prenez toutes les tâches possibles
@@ -31,10 +31,10 @@ export class Player {
             while (this.taches.length < 3) {
                 const tacheIndex = Math.floor(Math.random() * tachesPossibles.length);
 
-                console.log("index choisi : %d\n", tacheIndex)
+                // console.log("index choisi : %d\n", tacheIndex)
                 if (!indexesUtilises.includes(tacheIndex)) {
                     this.taches.push(tachesPossibles[tacheIndex]);
-                    console.log("task add : " + tachesPossibles[tacheIndex] + '\n')
+                    // console.log("task add : " + tachesPossibles[tacheIndex] + '\n')
                     indexesUtilises.push(tacheIndex);
                 }
             }
