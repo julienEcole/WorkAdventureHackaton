@@ -19,7 +19,7 @@ WA.onInit().then(() => {
             callback: async () => {
                 closePopup();
                 //WA.controls.disablePlayerControls();
-                const coWebsite = await WA.nav.openCoWebSite('test.html', true );
+                const coWebsite = await WA.nav.openCoWebSite('codeWorking.html', true );
                 //WA.controls.restorePlayerControls()
                 //coWebsite.close()
             }

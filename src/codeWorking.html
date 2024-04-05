@@ -5,22 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProgressBar Game</title>
     <style>
-        #gameContainer {
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #2980b9, #2c3e50);
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #gameContainer {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 1s ease-out;
         }
 
         #progressBarContainer {
             position: relative;
+            margin-bottom: 20px;
         }
 
         #progressBar {
             width: 300px;
-            height: 20px;
+            height: 40px;
             background-color: #f0f0f0;
             border: 1px solid #ccc;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
         }
 
         #progress {
@@ -28,6 +46,37 @@
             height: 100%;
             background-color: #4caf50;
             transition: width 1s ease-in-out;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        #loadingGif {
+            position: absolute;
+            top: -350px;
+            left: 50%;
+            transform: translateX(-50%); 
+            width: 400px; 
+            height: 300px; 
+            animation: bounce 1s infinite alternate;
         }
 
     </style>
