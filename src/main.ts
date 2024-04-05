@@ -73,7 +73,7 @@ WA.onInit().then(async () => {
             await WA.player.setOutlineColor(255, 0, 0);
             console.log("hello i don't understandz")
             await WA.player.teleport(3000, 296);
-            WA.controls.disablePlayerControls()
+            //WA.controls.disablePlayerControls()
 
 
         }
