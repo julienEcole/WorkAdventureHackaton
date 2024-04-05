@@ -27,7 +27,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 index: "./index.html",
-                chifomi: "./chifomi.html",
+                test: "./test.html",
                 ...getMapsScripts(maps),
             },
         },
