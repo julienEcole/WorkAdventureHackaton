@@ -80,7 +80,6 @@ WA.onInit().then(async () => {
             label: "Start",
             callback: async () => {
                 closePopup();
-                WA.controls.disablePlayerControls();
                 const coWebsite = await WA.nav.openCoWebSite('scanBadge.html', true);
             }
             
@@ -114,15 +113,7 @@ WA.onInit().then(async () => {
             await WA.player.setOutlineColor(255, 0, 0);
             console.log("hello i don't understandz")
             await WA.player.teleport(3000, 296);
-            //WA.controls.disablePlayerControls()
-            WA.camera.set(
-                100,
-                100,
-                2000,
-                1200,
-                false,
-                false,
-        )
+
 
 
         }
@@ -139,8 +130,15 @@ WA.onInit().then(async () => {
             const position = await WA.player.getPosition();
             WA.player.state.dead = true;
             WA.player.setOutlineColor(255, 0, 0);
-            WA.player.teleport(786, 296);
-            WA.controls.disablePlayerControls()
+            await WA.player.teleport(3000, 296);
+            WA.camera.set(
+                100,
+                100,
+                2000,
+                1200,
+                false,
+                false,
+            )
 
 
         }
@@ -280,6 +278,67 @@ function listenOnGreenZone() {
 
 
 }
+
+
+WA.room.area.onEnter('cofee').subscribe(() => {
+
+    const buttonDescriptor = {
+        id: "startButton",
+        label: "Start",
+        callback: async () => {
+            closePopup();
+            WA.controls.disablePlayerControls();
+            const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
+        }
+
+    };
+
+    currentPopup = WA.ui.openPopup("cofee_popup", "", [buttonDescriptor]);
+
+})
+WA.room.area.onLeave('cofee').subscribe(closePopup);
+
+
+WA.room.area.onEnter('numbers').subscribe(() => {
+
+    const buttonDescriptor1 = {
+        id: "startButton1",
+        label: "Start",
+        callback: async () => {
+            closePopup();
+            const coWebsite2 = await WA.nav.openCoWebSite('Unlock.html', true);
+        }
+
+    };
+
+    currentPopup = WA.ui.openPopup("numbers_popup", "", [buttonDescriptor1]);
+})
+
+
+
+
+WA.room.area.onLeave('numbers').subscribe(closePopup);
+
+
+
+WA.room.area.onEnter('badge').subscribe(() => {
+
+    const buttonDescriptor2 = {
+        id: "startButton",
+        label: "Start",
+        callback: async () => {
+            closePopup();
+            WA.controls.disablePlayerControls();
+            const coWebsite = await WA.nav.openCoWebSite('scanBadge.html', true);
+        }
+
+    };
+
+    currentPopup = WA.ui.openPopup("badge_popup", "", [buttonDescriptor2]);
+
+})
+WA.room.area.onLeave('badge').subscribe(closePopup);
+
 
 function extractLastSegmentFromUrl(url: string) {
     // Utilisation de la méthode split() pour séparer l'URL en segments en fonction du caractère "/"
