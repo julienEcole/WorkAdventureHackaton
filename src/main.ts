@@ -74,6 +74,14 @@ WA.onInit().then(async () => {
             console.log("hello i don't understandz")
             await WA.player.teleport(3000, 296);
             //WA.controls.disablePlayerControls()
+            WA.camera.set(
+                100,
+                100,
+                2000,
+                1200,
+                false,
+                false,
+        )
 
 
         }
