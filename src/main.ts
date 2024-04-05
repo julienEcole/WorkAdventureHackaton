@@ -28,6 +28,36 @@ WA.onInit().then(async () => {
     listenOnPlayers();
     listenForCountDown();
 
+    WA.room.showLayer("obstacle_collision");
+    WA.room.showLayer("furniture/obstacle");
+    let obstacle = true;
+    WA.room.area.onEnter('switch_doors').subscribe(() => {
+
+        if (!obstacle) {
+            WA.room.showLayer("obstacle_collision");
+            WA.room.showLayer("furniture/obstacle");
+            obstacle = true;
+        } else {
+            WA.room.hideLayer("obstacle_collision");
+            WA.room.hideLayer("furniture/obstacle");
+            obstacle = false;
+        }
+    })
+
+    WA.room.hideLayer("furniture/furniture_engines_on");
+    let engine = false;
+    WA.room.area.onEnter('switch_engine').subscribe(() => {
+
+        if (!engine) {
+            WA.room.showLayer("furniture/furniture_engines_on");
+            engine = true;
+        } else {
+            WA.room.hideLayer("furniture/furniture_engines_on");
+            engine = false;
+        }
+    })
+
+
     WA.room.area.onEnter('cofee').subscribe(() => {
 
         const buttonDescriptor = {
@@ -346,5 +376,6 @@ function extractLastSegmentFromUrl(url: string) {
     // Retourner le dernier segment de l'URL
     return segments.pop();
 }
+
 
 export {};
