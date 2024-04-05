@@ -4,9 +4,10 @@ import {bootstrapExtra} from "@workadventure/scripting-api-extra";
 import { Impostor, Player } from "./class/Player";
 
 console.log('Script started successfully');
-var screamSound = WA.sound.loadSound("/sounds/scream.ogg");
+var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
 let mapName: string | undefined = ""
 var killingPossibility: boolean = false;
+var isPoped : boolean = false;
 
 
 let currentPopup: any = undefined;
@@ -16,27 +17,39 @@ WA.onInit().then(async () => {
     console.log('Scripting API ready');
     console.log('Player tags: ', WA.player.tags)
 
+    
+
 
     var thePlayer : Player = new Player("titi")
     
     var Other : Player = new Player("toto")
 
     var monImpo : Impostor = new Impostor("sus", [thePlayer, Other])
+
+    WA.player.state.isKiller = isKiller()
+
+
     let currentPopup: any = undefined;
 
+    
+
     listenOnGreenZone();
+
+
     listenOnPlayers();
     listenForCountDown();
-
-    WA.room.area.onEnter('cofee').subscribe(() => {
-
+    WA.room.area.onEnter('clock').subscribe(() => {
         const buttonDescriptor = {
             id: "startButton",
             label: "Start",
             callback: async () => {
                 closePopup();
+                //WA.controls.disablePlayerControls();
+                const coWebsite = await WA.nav.openCoWebSite('codeWorking.html', true);
                 WA.controls.disablePlayerControls();
-                const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
+                const otherCoWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
+                WA.controls.disablePlayerControls();
+                closePopup();
             }
 
         };
@@ -45,54 +58,11 @@ WA.onInit().then(async () => {
         // const time = today.getHours() + ":" + today.getMinutes();
         currentPopup = WA.ui.openPopup("clockPopup", "\n\nVos taches sont :\n" + monImpo.tacheToString(), []);
         
-        currentPopup = WA.ui.openPopup("cofee_popup", "", [buttonDescriptor]);
-        
+        currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
     })
-    WA.room.area.onLeave('cofee').subscribe(closePopup);
 
 
-    WA.room.area.onEnter('numbers').subscribe(() => {
-
-        const buttonDescriptor1 = {
-            id: "startButton1",
-            label: "Start",
-            callback: async () => {
-                closePopup();                
-                const coWebsite2 = await WA.nav.openCoWebSite('Unlock.html', true);
-            }
-            
-        };
-        
-        currentPopup = WA.ui.openPopup("numbers_popup", "", [buttonDescriptor1]);
-    })
-    
-
-    
-    
-    WA.room.area.onLeave('numbers').subscribe(closePopup);
-    
-    
-
-    WA.room.area.onEnter('badge').subscribe(() => {
-
-        const buttonDescriptor2 = {
-            id: "startButton",
-            label: "Start",
-            callback: async () => {
-                closePopup();
-                WA.controls.disablePlayerControls();
-                const coWebsite = await WA.nav.openCoWebSite('scanBadge.html', true);
-            }
-            
-        };
-        
-        currentPopup = WA.ui.openPopup("badge_popup", "", [buttonDescriptor2]);
-        
-    })
-    WA.room.area.onLeave('badge').subscribe(closePopup);
-
-
-
+    WA.room.area.onLeave('clock').subscribe(closePopup);
 
 
     bootstrapExtra().then(() => {
@@ -114,25 +84,8 @@ WA.onInit().then(async () => {
             await WA.player.setOutlineColor(255, 0, 0);
             console.log("hello i don't understandz")
             await WA.player.teleport(3000, 296);
-            //WA.controls.disablePlayerControls()
-
-
-        }
-    });
-
-    if (WA.player.state.dead == true) WA.player.setOutlineColor(255, 0, 0);
-
-
-    await WA.players.configureTracking();
-
-    WA.event.on('player-killed').subscribe(async ({data: {killedPlayerId}}) => {
-        console.log(`Killed player: ${killedPlayerId}`);
-        if (WA.player.playerId === killedPlayerId) {
-            const position = await WA.player.getPosition();
-            WA.player.state.dead = true;
-            WA.player.setOutlineColor(255, 0, 0);
-            WA.player.teleport(786, 296);
-            WA.controls.disablePlayerControls()
+            WA.camera.followPlayer(false);
+            WA.camera.set(900,900);
 
 
         }
@@ -154,10 +107,17 @@ WA.player.onPlayerMove(removeKillButton);
 //WA.player.onPlayerMove(bloquedPlayer);
 async function addKillButton() {
     mapName = extractLastSegmentFromUrl(WA.room.mapURL);
-    console.log("MAP NAME" + mapName)
+    var killer = await WA.player.state.isKiller
+     console.log("killer : "+killer)
 
     if (mapName == "spaceship.tmj") {
-        killingPossibility = true
+        if(isPoped == false){
+        showRole();
+        isPoped = true;}
+        if(killer == true){
+            killingPossibility = true
+        }
+        
     }
     console.log("killing" + killingPossibility)
 
@@ -230,6 +190,9 @@ function startCountDown() {
 function listenOnPlayers() {
     WA.event.on("started").subscribe(() => {
         WA.nav.goToRoom('spaceship.tmj');
+
+
+        
     });
 }
 
@@ -278,6 +241,26 @@ function extractLastSegmentFromUrl(url: string) {
     const segments = url.split('/');
     // Retourner le dernier segment de l'URL
     return segments.pop();
+}
+
+async function showRole(){
+    if(await WA.player.state.isKiller == true){
+        WA.ui.openPopup("rolePopup", "Vous êtes un imposteur", [])
+    }else{
+        WA.ui.openPopup("rolePopup", "Vous êtes un Crewmate", [])
+    }
+
+    setInterval(function() {
+    }, 4000);
+    closePopup()
+    
+}
+
+function isKiller(){
+    let a = Math.random()*10;
+    console.log(Math.trunc(a/2))
+    if (Math.trunc(a%2)==0) return true
+    else return false;
 }
 
 export {};
