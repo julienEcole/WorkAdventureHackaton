@@ -28,6 +28,8 @@ export default defineConfig({
             input: {
                 index: "./index.html",
                 test: "./test.html",
+                chifomi: "./chifomi.html",
+                unlock : "./Unlock.html",
                 ...getMapsScripts(maps),
             },
         },

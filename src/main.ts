@@ -19,29 +19,49 @@ WA.onInit().then(async () => {
     listenOnGreenZone();
     listenOnPlayers();
     listenForCountDown();
-    WA.room.area.onEnter('clock').subscribe(() => {
+
+    WA.room.area.onEnter('cofee').subscribe(() => {
+
         const buttonDescriptor = {
             id: "startButton",
             label: "Start",
             callback: async () => {
                 closePopup();
-                //WA.controls.disablePlayerControls();
-                const coWebsite = await WA.nav.openCoWebSite('codeWorking.html', true );
                 WA.controls.disablePlayerControls();
-                const otherCoWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
-                WA.controls.disablePlayerControls();
-                closePopup();
+                const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
             }
             
         };
         
-        currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
+        currentPopup = WA.ui.openPopup("cofee_popup", "", [buttonDescriptor]);
+        
     })
+    WA.room.area.onLeave('cofee').subscribe(closePopup);
 
 
+    WA.room.area.onEnter('numbers').subscribe(() => {
 
+        const buttonDescriptor1 = {
+            id: "startButton1",
+            label: "Start",
+            callback: async () => {
+                closePopup();                
+                const coWebsite2 = await WA.nav.openCoWebSite('Unlock.html', true);
+            }
+            
+        };
+        
+        currentPopup = WA.ui.openPopup("numbersPopup", "", [buttonDescriptor1]);
+    })
+    
 
-    WA.room.area.onLeave('clock').subscribe(closePopup);
+    
+    
+    WA.room.area.onLeave('numbers').subscribe(closePopup);
+    
+    
+
+    //WA.room.area.onLeave('clock').subscribe(closePopup);
 
 
 

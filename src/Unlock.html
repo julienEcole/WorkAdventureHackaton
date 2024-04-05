@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://play.workadventu.re/iframe_api.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unlock</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1E1E1E;
+      color: white;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      background-color: #252526;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .key {
+      font-size: 18px;
+      padding: 15px;
+      margin: 0;
+      background-color: #007ACC;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      box-shadow: 0 5px #0066A4;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .key:active {
+      box-shadow: 0 2px #0066A4;
+      transform: translateY(3px);
+    }
+
+    .key.green {
+      background-color: #0F8022;
+    }
+
+    .key.red {
+      background-color: #A20D0D;
+    }
+
+    .red-flash {
+      animation: flash 0.5s;
+    }
+
+    @keyframes flash {
+      from { background-color: #A20D0D; }
+      to { background-color: #1E1E1E; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Unlock</h1>
+    <div id="keyboard1" class="keyboard"></div>
+    <div id="keyboard2" class="keyboard"></div>
+  </div>
+  <script>
+    const keysContainer1 = document.getElementById('keyboard1');
+    const keysContainer2 = document.getElementById('keyboard2');
+    const numbers = Array.from({length: 10}, (_, i) => i + 1);
+
+    // Shuffle numbers array
+    numbers.sort(() => Math.random() - 0.5);
+
+    let currentKey = 1;
+
+    numbers.forEach((number, index) => {
+      const button = document.createElement('button');
+      button.textContent = number;
+      button.classList.add('key');
+      button.dataset.key = number;
+      if (index < 5) {
+        keysContainer1.appendChild(button);
+      } else {
+        keysContainer2.appendChild(button);
+      }
+    });
+
+    const keys = document.querySelectorAll('.key');
+
+    keys.forEach(key => {
+      key.addEventListener('click', async () => {
+        const clickedKey = parseInt(key.getAttribute('data-key'));
+
+        if (clickedKey === currentKey) {
+          key.classList.add('green');
+          currentKey++;
+
+          if (currentKey > 10) {
+            WA.controls.restorePlayerControls();
+            const coWebsites = await WA.nav.getCoWebSites();
+            console.log("test avant boucle cowbsites");
+            for (let i = 0; i < coWebsites.length; i++) {
+            console.log("test cowbsites");
+            console.log(coWebsites[i]);
+            coWebsites[i].close();
+            }
+            setTimeout(() => {
+
+              alert('Congratulations! You completed the sequence!');
+              //resetGame();
+            }, 500);
+          }
+        } else {
+          key.classList.add('red'); // Add red color only to the wrong button
+          document.body.classList.add('red-flash');
+          setTimeout(() => {
+            document.body.classList.remove('red-flash');
+            resetGame();
+          }, 500);
+        }
+      });
+    });
+
+    function resetGame() {
+      keys.forEach(key => {
+        key.classList.remove('green');
+        key.classList.remove('red'); // Remove red color from all buttons
+      });
+      // Shuffle numbers array again for a new game
+      numbers.sort(() => Math.random() - 0.5);
+      currentKey = 1;
+    }
+  </script>
+</body>
+</html>
