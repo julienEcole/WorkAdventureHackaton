@@ -1,10 +1,11 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import {bootstrapExtra} from "@workadventure/scripting-api-extra";
+import {config} from "dotenv";
 
 console.log('Script started successfully');
 var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
-let mapName = ""
+let mapName: string | undefined = ""
 var killingPossibility : boolean = false;
 
 let currentPopup: any = undefined;
@@ -27,8 +28,8 @@ WA.onInit().then(async () => {
             callback: async () => {
                 closePopup();
                 WA.controls.disablePlayerControls();
-                const coWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
-                //WA.controls.restorePlayerControls()
+                await WA.nav.openCoWebSite('chifomi.html', true);
+                WA.controls.restorePlayerControls()
                 //coWebsite.close();
             }
 
@@ -88,11 +89,6 @@ WA.player.onPlayerMove(removeKillButton);
 WA.player.onPlayerMove(removeKillButton);
 
 //WA.player.onPlayerMove(bloquedPlayer);
-
-function bloquedPlayer() {
-    if (WA.player.state.dead == true) WA.player.teleport(786, 296);
-}
-
 async function addKillButton() {
     mapName = extractLastSegmentFromUrl( WA.room.mapURL);
     console.log("MAP NAME"+mapName)
@@ -210,7 +206,7 @@ function listenOnGreenZone() {
 
 
 }
-function extractLastSegmentFromUrl(url) {
+function extractLastSegmentFromUrl(url: string) {
     // Utilisation de la méthode split() pour séparer l'URL en segments en fonction du caractère "/"
     const segments = url.split('/');
     // Retourner le dernier segment de l'URL
