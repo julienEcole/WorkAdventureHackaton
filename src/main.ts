@@ -5,7 +5,7 @@ import {bootstrapExtra} from "@workadventure/scripting-api-extra";
 console.log('Script started successfully');
 var screamSound = WA.sound.loadSound("../public/sounds/scream.ogg");
 let mapName: string | undefined = ""
-var killingPossibility : boolean = false;
+var killingPossibility: boolean = false;
 
 
 let currentPopup: any = undefined;
@@ -25,25 +25,20 @@ WA.onInit().then(async () => {
             callback: async () => {
                 closePopup();
                 //WA.controls.disablePlayerControls();
-                const coWebsite = await WA.nav.openCoWebSite('codeWorking.html', true );
+                const coWebsite = await WA.nav.openCoWebSite('codeWorking.html', true);
                 WA.controls.disablePlayerControls();
                 const otherCoWebsite = await WA.nav.openCoWebSite('chifomi.html', true);
                 WA.controls.disablePlayerControls();
                 closePopup();
             }
-            
+
         };
-        
+
         currentPopup = WA.ui.openPopup("clockPopup", "", [buttonDescriptor]);
     })
 
 
-
-
     WA.room.area.onLeave('clock').subscribe(closePopup);
-
-
-
 
 
     bootstrapExtra().then(() => {
@@ -58,14 +53,12 @@ WA.onInit().then(async () => {
 
     await WA.players.configureTracking();
 
-    WA.event.on('player-killed').subscribe(async ({data: {killedPlayerId}}) => {
+    WA.event.on('player-killed').subscribe(async ({data: killedPlayerId}) => {
         console.log(`Killed player: ${killedPlayerId}`);
         if (WA.player.playerId === killedPlayerId) {
-            const position = await WA.player.getPosition();
             WA.player.state.dead = true;
             WA.player.setOutlineColor(255, 0, 0);
             WA.player.teleport(3000, 296);
-            screamSound.play(config)
             WA.controls.disablePlayerControls()
 
 
@@ -87,11 +80,13 @@ WA.player.onPlayerMove(removeKillButton);
 
 //WA.player.onPlayerMove(bloquedPlayer);
 async function addKillButton() {
-    mapName = extractLastSegmentFromUrl( WA.room.mapURL);
-    console.log("MAP NAME"+mapName)
+    mapName = extractLastSegmentFromUrl(WA.room.mapURL);
+    console.log("MAP NAME" + mapName)
 
-    if(mapName=="spaceship.tmj") {killingPossibility = true} ;
-console.log("killing"+killingPossibility)
+    if (mapName == "spaceship.tmj") {
+        killingPossibility = true
+    }
+    console.log("killing" + killingPossibility)
 
     await WA.players.configureTracking();
     const players = WA.players.list();
@@ -99,14 +94,14 @@ console.log("killing"+killingPossibility)
         const position1 = await WA.player.getPosition();
         const position2 = otherPlayer.position;
 
-        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true&& killingPossibility==true) {
+        if (Math.sqrt((position1.x - position2.x) ** 2 + (position1.y - position2.y) ** 2) < 60 && otherPlayer.state.dead != true && killingPossibility == true) {
             WA.ui.actionBar.addButton({
                 id: 'kill-btn',
                 label: `Tuer ${otherPlayer.name}`,
                 callback: (event) => {
                     console.log('Button clicked', event);
                     WA.event.broadcast('player-killed', {killedPlayerId: otherPlayer.playerId});
-                    screamSound.play(config);
+                    screamSound.play(undefined);
 
                 }
             });
@@ -128,6 +123,7 @@ async function removeKillButton() {
         }
     }
 }
+
 function checkPlayers() {
     const players = Array.from(WA.players.list());
     if (WA.player.state.isReady == false || players.length == 0) {
@@ -203,6 +199,7 @@ function listenOnGreenZone() {
 
 
 }
+
 function extractLastSegmentFromUrl(url: string) {
     // Utilisation de la méthode split() pour séparer l'URL en segments en fonction du caractère "/"
     const segments = url.split('/');
