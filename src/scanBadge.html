@@ -365,14 +365,13 @@ async function setStatus(status) {
 
 
   if (status === 'valid') {
-    WA.controls.restorePlayerControls();
-    const coWebsites = await WA.nav.getCoWebSites();
-    console.log("test avant boucle cowebsites");
-    for (let i = 0; i < coWebsites.length; i++) {
-      console.log("test cowebsites");
-      console.log(coWebsites[i]);
-      coWebsites[i].close();
-    }
+      resultat = true;
+      WA.controls.restorePlayerControls();
+      const coWebsites = await WA.nav.getCoWebSites();
+      for (let i = 0; i < coWebsites.length; i++) {
+          console.log("hello world valid")
+          await coWebsites[i].close();
+      }
   }
 }
 

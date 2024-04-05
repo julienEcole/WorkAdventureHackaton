@@ -120,6 +120,12 @@ WA.onInit().then(async () => {
     })
     WA.room.area.onLeave('badge').subscribe(closePopup);
 
+    function closePopup() {
+        if (currentPopup !== undefined) {
+            currentPopup.close();
+            currentPopup = undefined;
+        }
+    }
 
 
 
@@ -176,12 +182,7 @@ WA.onInit().then(async () => {
 
 }).catch(e => console.error(e));
 
-function closePopup() {
-    if (currentPopup !== undefined) {
-        currentPopup.close();
-        currentPopup = undefined;
-    }
-}
+
 
 WA.player.onPlayerMove(addKillButton);
 
